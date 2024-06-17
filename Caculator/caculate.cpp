@@ -155,6 +155,11 @@ bool isNum(std::string& origin)
     }
     return true;
 }
+/// <summary>
+/// 从一个包含数字的字符串中提取数字
+/// </summary>
+/// <param name="origin">初始字符串(std::string)</param>
+/// <returns>提取到的数字(std::string)</returns>
 std::string getNum(std::string origin)
 {
     std::string temp;
@@ -177,7 +182,7 @@ bool isLegally(std::string& origin)
         {
             lastop = 'n';
         }
-        else if (c == '+' || c == '*' || c == '/'|| c == '-'|| c == '%')
+        else if (c == '+' || c == '*' || c == '/'|| c == '-')
         {
             if (lastop == 'o')
             {
@@ -185,13 +190,23 @@ bool isLegally(std::string& origin)
             }     
             lastop = 'o';
         }
+        else if (c == '%')
+        {
+            if (lastop == 'o'||lastop =='p')
+            {
+                return false;
+            }
+            lastop = 'p';
+        }
         if (c == '(')
         {
             brackets += 1;
+            lastop = 'b';
         }
         else if (c == ')')
         {
             brackets -= 1;
+            lastop = 'b';
         }
     }
     if (brackets != 0)

@@ -188,6 +188,13 @@ void CCaculatorDlg::OnBnClickedCaculate()
 	// TODO: 在此添加控件通知处理程序代码
 	UpdateData(true);
 	caculation = CStringToStdString(Caculation);
+	if (!isLegally(caculation))
+	{
+		Result_UI = _T("计算错误");
+		UpdateData(0);
+		return;
+	}
+	caculation = legitimize(caculation);
 	std::string change = infixToPostfix(caculation);
 	result = evaluatePostfix(change);
 	Result_UI = DoubleToString(result);
@@ -361,6 +368,7 @@ void CCaculatorDlg::OnBnClickedEmp()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	Caculation = "";
+	lastc = ' ';
 	UpdateData(0);
 }
 
