@@ -30,4 +30,10 @@ CString DoubleToString(double value, int precision = 6);
 ///  <param name="precision">转换精度(保留小数位数)</param>
 ///  <returns>转换后的std::string类型字符串</returns>
 std::string DoubleToStdString(double value, int precision);
+/// <summary>
+/// std::string转CString
+/// </summary>
+/// /// <param name="cstr">需要转换的std::string字符串</param>
+/// <returns>转换后的CString类型字符串</returns>
+CString StdStringToString(const std::string sstr);
 

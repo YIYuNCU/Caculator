@@ -32,7 +32,7 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnBnClickedCaculate();
+	afx_msg void OnBnClickedButton1();
 	/// <summary>
 	/// 计算式(CString)
 	/// </summary>
@@ -46,12 +46,9 @@ public:
 	/// </summary>
 	double result;
 	/// <summary>
-	/// 最后一个添加的字符(char)
+	/// 最后一个字符
 	/// </summary>
 	char lastc;
-	CString Result_UI;
-	afx_msg void OnEnChangeCalculations();
-	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClicked0();
 	afx_msg void OnBnClicked1();
 	afx_msg void OnBnClicked2();
@@ -72,4 +69,6 @@ public:
 	afx_msg void OnBnClickedBackspace();
 	afx_msg void OnBnClickedBrack();
 	afx_msg void OnBnClickedBra();
+	afx_msg void OnBnClickedCaculate();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

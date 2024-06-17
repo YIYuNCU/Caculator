@@ -139,11 +139,7 @@ double evaluatePostfix(const std::string& postfix)
         return result;
     }
 }
-/// <summary>
-/// 判断字符串是否表示数字
-/// </summary>
-/// <param name="origin">需要判断的字符串</param>
-/// <returns>是否为数字</returns>
+
 bool isNum(std::string& origin)
 {
     for (const char c : origin)
@@ -210,6 +206,10 @@ bool isLegally(std::string& origin)
         }
     }
     if (brackets != 0)
+    {
+        return false;
+    }
+    if (!isdigit(origin.at(origin.size()-1)) && origin.find(origin.size()) != ')')
     {
         return false;
     }

@@ -55,7 +55,6 @@ END_MESSAGE_MAP()
 
 CCaculatorDlg::CCaculatorDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CACULATOR_DIALOG, pParent)
-	, Result_UI(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -64,7 +63,6 @@ void CCaculatorDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_Calculations, Caculation);
-	DDX_Text(pDX, IDC_RESULT, Result_UI);
 }
 
 BEGIN_MESSAGE_MAP(CCaculatorDlg, CDialogEx)
@@ -72,7 +70,6 @@ BEGIN_MESSAGE_MAP(CCaculatorDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_Caculate, &CCaculatorDlg::OnBnClickedCaculate)
-	ON_EN_CHANGE(IDC_Calculations, &CCaculatorDlg::OnEnChangeCalculations)
 	ON_BN_CLICKED(NUM_0, &CCaculatorDlg::OnBnClicked0)
 	ON_BN_CLICKED(NUM_1, &CCaculatorDlg::OnBnClicked1)
 	ON_BN_CLICKED(NUM_2, &CCaculatorDlg::OnBnClicked2)
@@ -190,26 +187,24 @@ void CCaculatorDlg::OnBnClickedCaculate()
 	caculation = CStringToStdString(Caculation);
 	if (!isLegally(caculation))
 	{
-		Result_UI = _T("计算错误");
-		UpdateData(0);
+		Caculation = _T("计算式错误");
+		UpdateData(false);
+		Caculation = "";
+		return;
+	}
+	if (isNum(caculation))
+	{
+		Caculation = "";
+		UpdateData(false);
+		Caculation = StdStringToString(caculation);
+		UpdateData(false);
 		return;
 	}
 	caculation = legitimize(caculation);
 	std::string change = infixToPostfix(caculation);
 	result = evaluatePostfix(change);
-	Result_UI = DoubleToString(result);
+	Caculation = DoubleToString(result);
 	UpdateData(false);
-}
-
-
-void CCaculatorDlg::OnEnChangeCalculations()
-{
-	// TODO:  如果该控件是 RICHEDIT 控件，它将不
-	// 发送此通知，除非重写 CDialogEx::OnInitDialog()
-	// 函数并调用 CRichEditCtrl().SetEventMask()，
-	// 同时将 ENM_CHANGE 标志“或”运算到掩码中。
-
-	// TODO:  在此添加控件通知处理程序代码
 }
 
 
@@ -396,6 +391,7 @@ void CCaculatorDlg::OnBnClickedBackspace()
 	int len = 0;
 	len = Caculation.GetLength()-1;
 	Caculation = Caculation.Left(len);
+	lastc = Caculation.IsEmpty() ? ' ' : Caculation.GetAt(Caculation.GetLength()-1);
 	UpdateData(0);
 }
 
@@ -423,4 +419,70 @@ void CCaculatorDlg::OnBnClickedBra()
 	Caculation += "(";
 	UpdateData(0);
 	lastc = '(';
+}
+
+
+BOOL CCaculatorDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		if (pMsg->wParam == '9')
+		{
+			if ((::GetAsyncKeyState(VK_SHIFT) < 0))//按下左括号组合键
+			{
+				OnBnClickedBra();
+				return true;
+			}
+		}
+		else if (pMsg->wParam == '0')
+		{
+			if ((::GetAsyncKeyState(VK_SHIFT) < 0))//按下右括号组合键
+			{
+				OnBnClickedBrack();
+				return true;
+			}
+		}
+		if (pMsg->wParam == VK_ADD)				//按下+
+		{
+			OnBnClickedAdd();
+		}
+		else if (pMsg->wParam == VK_SUBTRACT)	//按下-
+		{
+			OnBnClickedSub();
+		}
+		else if (pMsg->wParam == VK_MULTIPLY)	//按下*
+		{
+			OnBnClickedMul();
+		}
+		else if (pMsg->wParam == VK_DIVIDE)		//按下/
+		{
+			OnBnClickedDiv();
+		}
+		else if (pMsg->wParam == VK_RETURN)		//按下Enter
+		{
+			OnBnClickedCaculate();
+		}
+		else if (pMsg->wParam == VK_BACK)		//按下Backspace
+		{
+			OnBnClickedBackspace();
+		}
+		else if (pMsg->wParam == VK_DECIMAL || pMsg->wParam == VK_OEM_PERIOD)
+		{
+			OnBnClickedDot();
+		}
+		else if (pMsg->wParam == VK_NUMPAD0 || pMsg->wParam == VK_NUMPAD1 || pMsg->wParam == VK_NUMPAD2 ||
+			pMsg->wParam == VK_NUMPAD3 || pMsg->wParam == VK_NUMPAD4 || pMsg->wParam == VK_NUMPAD5 ||
+			pMsg->wParam == VK_NUMPAD6 || pMsg->wParam == VK_NUMPAD7 || pMsg->wParam == VK_NUMPAD8 ||
+			pMsg->wParam == VK_NUMPAD9 || isdigit(pMsg->wParam)
+			)								   //按下数字
+		{
+			const char temp = pMsg->wParam - 0x30;
+			Caculation += temp;
+			UpdateData(0);
+			lastc = temp;
+		}
+		return true;
+	}
+	return CDialogEx::PreTranslateMessage(pMsg);
 }

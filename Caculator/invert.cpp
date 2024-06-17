@@ -27,3 +27,10 @@ std::string DoubleToStdString(double value, int precision)
     std::string temp = CStringToStdString(str);
     return temp;
 }
+
+CString StdStringToString(const std::string sstr)
+{
+    CString temp;
+    temp = sstr.c_str();
+    return temp ;
+}
