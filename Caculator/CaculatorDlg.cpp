@@ -399,7 +399,7 @@ void CCaculatorDlg::OnBnClickedBackspace()
 void CCaculatorDlg::OnBnClickedBrack()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (lastc == '+' || lastc == '-' || lastc == '*' || lastc == '/' || lastc == '.' || lastc == '%' || lastc == '(' || Caculation.IsEmpty())
+	if (lastc == '+' || lastc == '-' || lastc == '*' || lastc == '/' || lastc == '.' || lastc == '(' || Caculation.IsEmpty())
 	{
 		return;
 	}
@@ -440,6 +440,14 @@ BOOL CCaculatorDlg::PreTranslateMessage(MSG* pMsg)
 			if ((::GetAsyncKeyState(VK_SHIFT) < 0))//按下右括号组合键
 			{
 				OnBnClickedBrack();
+				return true;
+			}
+		}
+		else if (pMsg->wParam == '5')
+		{
+			if ((::GetAsyncKeyState(VK_SHIFT) < 0))//按下右括号组合键
+			{
+				OnBnClickedPercent();
 				return true;
 			}
 		}
