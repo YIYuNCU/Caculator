@@ -209,7 +209,7 @@ bool isLegally(std::string& origin)
     {
         return false;
     }
-    if (!isdigit(origin.at(origin.size()-1)) && origin.find(origin.size()) != ')')
+    if (!isdigit(origin.at(origin.size()-1)) && origin.at(origin.size() - 1) != ')' && origin.at(origin.size() - 1) != '%')
     {
         return false;
     }
