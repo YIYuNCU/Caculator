@@ -49,6 +49,7 @@ public:
 	/// 最后一个字符
 	/// </summary>
 	char lastc;
+
 	afx_msg void OnBnClicked0();
 	afx_msg void OnBnClicked1();
 	afx_msg void OnBnClicked2();

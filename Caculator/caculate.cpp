@@ -142,6 +142,10 @@ double evaluatePostfix(const std::string& postfix)
 
 bool isNum(std::string& origin)
 {
+    if (origin.size() == 0)
+    {
+        return false;
+    }
     for (const char c : origin)
     {
         if (!isdigit(c) && c != '.')
@@ -174,8 +178,16 @@ bool isLegally(std::string& origin)
     int brackets = 0;
     for (const char c : origin)
     {
+        if (c == -68)
+        {
+            return false;
+        }
         if (isdigit(c))
         {
+            if (lastop == 'p')
+            {
+                return false;
+            }
             lastop = 'n';
         }
         else if (c == '+' || c == '*' || c == '/'|| c == '-')
@@ -272,10 +284,14 @@ std::string legitimize(std::string& origin)
                 pertemp = 0.01 * pertemp;
                 operand = DoubleToStdString(pertemp, 10);
             }
+            else if (operand.size() == 0)
+            {
+                operand = "*0.01";
+            }
             else
             {
-                std::string temp = getNum(operand);
-                pertemp = stringToDouble(temp);
+                std::string mtemp = getNum(operand);
+                pertemp = stringToDouble(mtemp);
                 pertemp = 0.01 * pertemp;
                 operand = "(0-" + DoubleToStdString(pertemp, 10) + ')';
             }
@@ -283,7 +299,7 @@ std::string legitimize(std::string& origin)
         }
         else if (c == '(' || c == ')')
         {
-            if (!isNum(operand) && lastop != '%')
+            if ((!isNum(operand) && operand.size() != 0) && lastop != '%')
             {
                 operand += ')';
             }
