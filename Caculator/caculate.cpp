@@ -249,7 +249,7 @@ std::string legitimize(std::string& origin)
         }
         else if (c == '+' || c == '*' || c == '/')
         {
-            if (!isNum(operand) && lastop != '%')
+            if (!isNum(operand) && lastop != '%' && lastop != ')')
             {
                 operand += ')';
             }
